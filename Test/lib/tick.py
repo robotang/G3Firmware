@@ -1,5 +1,5 @@
 from __future__ import division
-import sys, serial, time, msvcrt, os
+import sys, serial, time, os
 from threading import Thread
 from time import gmtime, strftime
 import datetime

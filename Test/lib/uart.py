@@ -1,5 +1,5 @@
 from __future__ import division
-import sys, serial, time, msvcrt, os
+import sys, serial, time, os
 from threading import Thread
 import datetime
 
@@ -41,6 +41,8 @@ class UART:
         
     def send(self, data):
         if self._running:
+            if type(data) is list:
+                data = bytearray(data)
             self._serial.write(data)
         
     def rts_set(self):

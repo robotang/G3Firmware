@@ -19,8 +19,24 @@ crctab_maxim = [
 233, 183, 85, 11, 136, 214, 52, 106, 43, 117, 151, 201, 74, 20, 246, 168,
 116, 42, 200, 150, 21, 75, 169, 247, 182, 232, 10, 84, 215, 137, 107, 53]
 
-def crc_maxim(data):
+def crc_1wire(data):
     val = 0
     for x in data:
         val = crctab_maxim[val ^ x]
     return val
+
+X25_INIT_CRC = 0xFFFF
+X25_VALIDATE_CRC = 0xF0B8 
+
+def crc_ccitt16_accumulate(data, crc):
+    tmp = (data & 0xFF) ^ (crc & 0xFF)
+    tmp ^= (tmp << 4) & 0xFF
+    crc = ((crc >> 8) & 0xFFFF) ^ ((tmp << 8) & 0xFFFF) ^ ((tmp << 3) & 0xFFFF) ^ ((tmp >> 4) & 0xFFFF)
+    return crc & 0xFFFF
+        
+def crc_ccitt16(data, length):
+    crc = X25_INIT_CRC
+    for x in data:
+        crc = crc_ccitt16_accumulate(x, crc)
+    return crc & 0xFFFF
+
